@@ -1,12 +1,14 @@
 package com.example.archery.services;
 
+import java.security.KeyStore.Entry;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import com.example.archery.constants.Constants;
-import com.example.archery.entities.Team;
 import com.example.archery.repositories.ICircleHitRepository;
 import com.example.archery.repositories.ITeamRepository;
 
@@ -25,6 +27,8 @@ public class ScoreBoardService implements IScoreBoardService {
     }
  
     private final Map<String,Integer> teamScoreMap =new HashMap<String,Integer>();
+    private final Map<String,Integer> finalScoreMap =new HashMap<String,Integer>();
+    private final Map<String,Integer> bonusScoreMap =new HashMap<String,Integer>();
     private final LinkedHashMap<Integer,Integer> playerScoreMap =new LinkedHashMap<Integer,Integer>();
    
     
@@ -37,65 +41,145 @@ public class ScoreBoardService implements IScoreBoardService {
     public void tournamentScoreBoard(){
 
         List<String> team= teamRepository.findAll().stream()
-        .map(p-> p.getTeamName()).collect(Collectors.toList());   
-        
+        .map(p-> p.getTeamName()).collect(Collectors.toList()); 
 
-       
-
-        int invTotal=0; int totalScore=0; int tempTotal=0;
+        int invTotal=0; int totalScore=0; int tempTotal=0; int prevScore=0; int prevBonus=0;
 
         for(int i=1; i<=Constants.NUMBER_OF_MAX_ROUNDS; i++){
             String num=Integer.toString(i);
+            System.out.println(); 
             System.out.println("Round "+num);
             System.out.println("Team scores");  
             System.out.println("----------------"); 
 
             for(int j=0; j<Constants.NUMBER_OF_MAX_TEAMS; j++){
-           
-           
+                
+                // CHECKING IF IS THERE ANY BONUS POINTS FOR A TEAM
+                int bonus=0;
+                boolean isBonusPoint=hasBonusPoints(team.get(j), num);
+                    if(isBonusPoint){
+                        prevBonus=bonusScoreMap.get(team.get(j));
+                        bonus=prevBonus;
+                        bonusScoreMap.put(team.get(j), bonus);
+                        //System.out.println("B:"+bonusScoreMap);
+                    }  else {
+                        bonus=0;
+                        bonusScoreMap.put(team.get(j), bonus);
+                    }
+
             List<String> teamCircleHitList=circleHitRepository.getDataRoundAndTeamWise(team.get(j),num);
-            //System.out.println(teamCircleHitList);
-           
-            for(int k=0; k<teamCircleHitList.size(); k++){                
-                invTotal=(pointMap.get(teamCircleHitList.get(k))+i-1);              
-                totalScore=totalScore+invTotal;
-               
-            }
             
-            // TOTAL SCORE BY TEAM WISE
+           
+            for(int k=0; k<teamCircleHitList.size(); k++){  
+                if(teamCircleHitList.get(k).equals("F")){
+                 //System.out.println(teamCircleHitList.contains("F"));
+                invTotal=pointMap.get(teamCircleHitList.get(k)); 
+                //System.out.println(invTotal);               
+                } 
+                else {
+                invTotal=pointMap.get(teamCircleHitList.get(k))+(i-1);                    
+                }  
+                //System.out.println(teamCircleHitList);
+                //System.out.println("INV: "+invTotal);        
+                totalScore=totalScore+invTotal;               
+                }
+            
           
+            // TOTAL SCORE BY TEAM WISE          
            
             if(i==1){
-            tempTotal=totalScore;
+            tempTotal=totalScore+bonus;
+            //System.out.println("BONUS:"+bonus);
             teamScoreMap.put(team.get(j), tempTotal);
             }
             else{
-            tempTotal=totalScore+teamScoreMap.get(team.get(j));
+            prevScore=teamScoreMap.get(team.get(j));
+            tempTotal=prevScore+totalScore+bonus;          
             teamScoreMap.put(team.get(j), tempTotal);
-            //System.out.println("PREV:"+teamScoreMap.get(team.get(j))); 
+            //System.out.println("BONUS:"+bonus);
+           // System.out.println("PREV:"+prevScore); 
             }
            
-            //System.out.println(team.get(j)+":"+totalScore+"+"+teamScoreMap.get(team.get(j)));
-            System.out.println(team.get(j)+":"+teamScoreMap.get(team.get(j)));           
+            System.out.println(team.get(j)+":"+tempTotal);           
+            finalScoreMap.put(team.get(j), tempTotal);
+            
             totalScore=0;
             invTotal=0;
-           // teamScoreMap.put(team.get(j),0);
-                     
+            prevScore=0;
+            tempTotal=0;
+
+            //System.out.println(team.get(j)+":"+bonus);          
 
             }
             //System.out.println("+++"+teamScoreMap); 
             
-            getIndivisualPlayerScoreRoundWise(num);
+            //getIndivisualPlayerScoreRoundWise(num);
+            System.out.println("Bonus points:");
+            System.out.println("-------------"); 
 
+            for(int n=0; n<Constants.NUMBER_OF_MAX_TEAMS; n++){
            
+            int bonusPoints=0; int previousBonus=0;
+            boolean isBonus=hasBonusPoints(team.get(n), num);
+           
+            if(isBonus){
+                previousBonus=bonusScoreMap.get(team.get(n));
+                bonusPoints=previousBonus+2;
+                bonusScoreMap.put(team.get(n), bonusPoints);
+            }  else {
+                bonusPoints=0;
+                bonusScoreMap.put(team.get(n), bonusPoints);
+            }
+
+            System.out.println(team.get(n)+":"+bonusPoints);
+
+            }
+           
+     
+
+
+
         }
+
+               // FIND MAXIMUM SCORE 
+               int maxScoreValueInMap = (Collections.max(finalScoreMap.values()));
+ 
+               // Iterate through HashMap
+               for (java.util.Map.Entry<String, Integer> entry : finalScoreMap.entrySet()) {
+        
+                   if (entry.getValue() == maxScoreValueInMap) { 
+                       // Print the key with max value
+                      
+                       String winTeamName =entry.getKey();
+                       System.out.printf("Game over. %s won!!!", winTeamName); 
+                       
+                       
+       
+       
+                   }
+               }
     
     }
 
     @Override
-    public void getBonusPointsRoundWise(String teamName, String roundNum) {
-        // TODO Auto-generated method stub
-        
+    public boolean hasBonusPoints(String teamName, String roundNum) {
+        List<String> listOfTeamCircle= circleHitRepository.findAll().stream() 
+        .filter(t-> t.getTeamName().equals(teamName))      
+        .filter(r-> r.getRoundName().equals(roundNum))
+        .map(p-> p.getCircleName()).collect(Collectors.toList());       
+
+       //System.out.println(listOfTeamCircle);
+       String s1=listOfTeamCircle.get(0);
+       String s2=listOfTeamCircle.get(1);
+       if(s1.equals(s2)){
+        bonusScoreMap.put(teamName, 2);
+        return true;
+       
+      }
+      else {
+         return false;
+      }
+            
     }
 
     @Override
@@ -160,11 +244,7 @@ public class ScoreBoardService implements IScoreBoardService {
         
     }
 
-    @Override
-    public void getTeamScoreRoundWise(String teamName, String roundNum) {
-        // TODO Auto-generated method stub
-        
-    }
+   
 
 
     
