@@ -15,12 +15,13 @@ public class CircleHitCommand implements ICommand{
     @Override
     public void execute(List<String> tokens) {
         try {
-        String playerName=tokens.get(1);
-        String circleName=tokens.get(2);
-        String roundName=tokens.get(3);
+        String teamName=tokens.get(1);
+        String playerName=tokens.get(2);
+        String circleName=tokens.get(3);
+        String roundName=tokens.get(4);
 
-        PlayerCirlcleHit hit=circleHitService.create(playerName, circleName, roundName);
-        System.out.println(hit.getPlayerName() +" "+ hit.getCircleName() + " "+ hit.getRoundName());
+        PlayerCirlcleHit hit=circleHitService.create(teamName, playerName, circleName, roundName);
+        System.out.println(hit.getTeamName() +" "+hit.getPlayerName() +" "+ hit.getCircleName() + " "+ hit.getRoundName());
         //System.out.println(hit);
 
             
