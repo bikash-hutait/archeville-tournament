@@ -108,8 +108,8 @@ public class ArcheryApplication {
         scoreBoardService.tournamentScoreBoard();
 
         System.out.println();   
-        System.out.println("************"); 
-        //scoreBoardService.tournamentScoreBoard();
+       // System.out.println("************"); 
+        //scoreBoardService.getIndivisualPlayerScoreRoundWise();
 
 
   

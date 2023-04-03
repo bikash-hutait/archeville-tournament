@@ -29,7 +29,7 @@ public class ScoreBoardService implements IScoreBoardService {
     private final Map<String,Integer> teamScoreMap =new HashMap<String,Integer>();
     private final Map<String,Integer> finalScoreMap =new HashMap<String,Integer>();
     private final Map<String,Integer> bonusScoreMap =new HashMap<String,Integer>();
-    private final LinkedHashMap<Integer,Integer> playerScoreMap =new LinkedHashMap<Integer,Integer>();
+    private final Map<String,Integer> playerScoreMap =new HashMap<String,Integer>();
    
     
     public ScoreBoardService(ICircleHitRepository circleHitRepository, ITeamRepository teamRepository) {
@@ -113,7 +113,8 @@ public class ScoreBoardService implements IScoreBoardService {
             }
             //System.out.println("+++"+teamScoreMap); 
             
-            //getIndivisualPlayerScoreRoundWise(num);
+            getIndivisualPlayerScoreRoundWise(num);
+
             System.out.println("Bonus points:");
             System.out.println("-------------"); 
 
@@ -186,6 +187,7 @@ public class ScoreBoardService implements IScoreBoardService {
     public void getIndivisualPlayerScoreRoundWise(String roundNumber) {
        
                     // TOTAL SCORE BY TEAM WISE
+                    System.out.println();
                     System.out.println("Individual Scores");  
                     System.out.println("----------------");
                   
@@ -196,9 +198,9 @@ public class ScoreBoardService implements IScoreBoardService {
                     .map(p-> p.getPlayer2()).collect(Collectors.toList());
         
                    
-                    //System.out.println(ListOfPlayer1); 
-                   // System.out.println(ListOfPlayer2); 
                     final LinkedHashMap<Integer,String> Allplayers= new LinkedHashMap<Integer,String>();
+                    int roundNum=Integer.parseInt(roundNumber);
+                  
                     for(int l=0; l<3; l++){               
                         int p1=1*l+l;
                         int p2=p1+1;
@@ -210,32 +212,46 @@ public class ScoreBoardService implements IScoreBoardService {
                     }
                   
                     
-                    int indivisual_score=0; int totalScore_player=0; int tempTotal_player=0;
-                    System.out.println(Allplayers);
+                    int indivisual_score=0; int totalScore_player=0;
+                    int tempTotal_score=0; int playerPrevScore=0;
+                    
                     for(int p=1; p<=Allplayers.size(); p++){                           
                            
                     List<String> playerCircleHitList=circleHitRepository.findCircleByPlayerName(Allplayers.get(p-1), roundNumber);
-                    System.out.println("#"+playerCircleHitList); 
-                   
-                    for(int k=0; k<playerCircleHitList.size(); k++){                          
-                        indivisual_score=(pointMap.get(playerCircleHitList.get(k))); 
-                       
-                        System.out.println("@"+indivisual_score); 
-                                     
-                    }
-                       
                   
+                   
+                   
+                       
+                    for(int k=0; k<playerCircleHitList.size(); k++){  
+                        if(playerCircleHitList.get(k).equals("F")){                        
+                         indivisual_score=pointMap.get(playerCircleHitList.get(k));                        
+                                  
+                        } 
+                        else {
+                        indivisual_score=pointMap.get(playerCircleHitList.get(k))+(roundNum-1); 
+                        
+                        } 
+                        
+                        totalScore_player=totalScore_player+indivisual_score;                        
+
+                        }
                     
-                    // TOTAL SCORE BY PLAYER WISE
-                    //indivisual_score=indivisual_score+p-1;
-                    System.out.println("@@:"+indivisual_score); 
-                    totalScore_player=totalScore_player+indivisual_score;
-                    tempTotal_player=totalScore_player;                  
-                    System.out.println(Allplayers.get(p-1)+": "+tempTotal_player);                             
-                    totalScore_player=0;
+                    
+                        if(playerScoreMap.containsKey(Allplayers.get(p-1)))
+                        playerPrevScore=playerScoreMap.get(Allplayers.get(p-1));
+                        else
+                        playerPrevScore=0;
+                      
+                   tempTotal_score=playerPrevScore+totalScore_player;          
+                   playerScoreMap.put(Allplayers.get(p-1), tempTotal_score);
+                  
+                   
+                    System.out.println(Allplayers.get(p-1)+": "+tempTotal_score);                             
+                    playerScoreMap.put(Allplayers.get(p-1), tempTotal_score);
+                    playerPrevScore=0;
                     indivisual_score=0;
-                    System.out.println(); 
-                
+                    tempTotal_score=0;
+                    totalScore_player=0;              
                 
                    
                     }          
