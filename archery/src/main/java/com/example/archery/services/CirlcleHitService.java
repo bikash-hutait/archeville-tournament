@@ -11,8 +11,8 @@ public class CirlcleHitService implements ICirlcleHitService {
     }
 
     @Override
-    public PlayerCirlcleHit create(String playerName, String circleName, String roundName) {
-        return cirlceHitRepository.save(new PlayerCirlcleHit(playerName, circleName, roundName));
+    public PlayerCirlcleHit create(String teamName, String playerName, String circleName, String roundName) {
+        return cirlceHitRepository.save(new PlayerCirlcleHit(teamName, playerName, circleName, roundName));
     }
     
 }

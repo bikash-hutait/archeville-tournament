@@ -1,1 +1,33 @@
-CREATE-TEAM Gyrhuna P1 P2
+CREATE-TEAM/Gyrhuna/János Diák/Süsü
+CREATE-TEAM/Achni/Meilong/Tianlong
+CREATE-TEAM/Bathar/Pakhangba/Poubi Lai Paphal
+CIRCLE-HIT/Gyrhuna/János Diák/A/1
+CIRCLE-HIT/Gyrhuna/Süsü/B/1
+CIRCLE-HIT/Achni/Meilong/C/1
+CIRCLE-HIT/Achni/Tianlong/D/1
+CIRCLE-HIT/Bathar/Pakhangba/E/1
+CIRCLE-HIT/Bathar/Poubi Lai Paphal/F/1
+CIRCLE-HIT/Gyrhuna/János Diák/A/2
+CIRCLE-HIT/Gyrhuna/Süsü/B/2
+CIRCLE-HIT/Achni/Meilong/C/2
+CIRCLE-HIT/Achni/Tianlong/D/2
+CIRCLE-HIT/Bathar/Pakhangba/E/2
+CIRCLE-HIT/Bathar/Poubi Lai Paphal/F/2
+CIRCLE-HIT/Gyrhuna/János Diák/A/3
+CIRCLE-HIT/Gyrhuna/Süsü/B/3
+CIRCLE-HIT/Achni/Meilong/A/3
+CIRCLE-HIT/Achni/Tianlong/A/3
+CIRCLE-HIT/Bathar/Pakhangba/A/3
+CIRCLE-HIT/Bathar/Poubi Lai Paphal/A/3
+CIRCLE-HIT/Gyrhuna/János Diák/A/4
+CIRCLE-HIT/Gyrhuna/Süsü/A/4
+CIRCLE-HIT/Achni/Meilong/A/4
+CIRCLE-HIT/Achni/Tianlong/B/4
+CIRCLE-HIT/Bathar/Pakhangba/A/4
+CIRCLE-HIT/Bathar/Poubi Lai Paphal/A/4
+CIRCLE-HIT/Gyrhuna/János Diák/B/5
+CIRCLE-HIT/Gyrhuna/Süsü/C/5
+CIRCLE-HIT/Achni/Meilong/A/5
+CIRCLE-HIT/Achni/Tianlong/B/5
+CIRCLE-HIT/Bathar/Pakhangba/E/5
+CIRCLE-HIT/Bathar/Poubi Lai Paphal/F/5

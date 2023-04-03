@@ -6,23 +6,29 @@ public class PlayerCirlcleHit extends BaseEntity {
     private final String playerName;
 	private final String circleName;
     private final String roundName;
+    private final String teamName;
 
     
-    public PlayerCirlcleHit(String playerName, String circleName, String roundName) {
+    public PlayerCirlcleHit(String teamName, String playerName, String circleName, String roundName) {
+        this.teamName = teamName;
         this.playerName = playerName;
         this.circleName = circleName;
         this.roundName = roundName;
     }
 
 
-    public PlayerCirlcleHit(String id, String playerName, String circleName, String roundName) {
+    public PlayerCirlcleHit(String id, String teamName, String playerName, String circleName, String roundName) {
         this.id=id;
+        this.teamName = teamName;
         this.playerName = playerName;
         this.circleName = circleName;
         this.roundName = roundName;
     }
 
 
+    public String getTeamName() {
+        return teamName;
+    }
 
     public String getPlayerName() {
         return playerName;

@@ -1,21 +1,21 @@
 package com.example.archery.repositories;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.example.archery.constants.Constants;
 import com.example.archery.entities.PlayerCirlcleHit;
 
 public class CircleHitRepository implements ICircleHitRepository {
-    private final Map<String,PlayerCirlcleHit> circleHitMap; 
+    private final LinkedHashMap<String,PlayerCirlcleHit> circleHitMap; 
     private Integer autoIncrement=0;   
 
     public CircleHitRepository(){
-        circleHitMap = new HashMap<String,PlayerCirlcleHit>();
+        circleHitMap = new LinkedHashMap<String,PlayerCirlcleHit>();
     }
 
-    public CircleHitRepository(Map<String, PlayerCirlcleHit> circleHitMap) {
+    public CircleHitRepository(LinkedHashMap<String, PlayerCirlcleHit> circleHitMap) {
         this.circleHitMap = circleHitMap;       
     }
 
@@ -24,7 +24,7 @@ public class CircleHitRepository implements ICircleHitRepository {
 
         if(entity.getId()==null){
             autoIncrement++;
-            PlayerCirlcleHit circle = new PlayerCirlcleHit(Integer.toString(autoIncrement), entity.getPlayerName(),entity.getCircleName(), entity.getRoundName());
+            PlayerCirlcleHit circle = new PlayerCirlcleHit(Integer.toString(autoIncrement), entity.getTeamName(), entity.getPlayerName(),entity.getCircleName(), entity.getRoundName());
             circleHitMap.put(circle.getId(),circle);
             return circle;
         }
@@ -40,9 +40,10 @@ public class CircleHitRepository implements ICircleHitRepository {
     }
     
     @Override
-    public List<String> findCircleByPlayerName(String playerName) {
+    public List<String> findCircleByPlayerName(String playerName, String round) {
         return circleHitMap.values().stream()
-        .filter(t-> t.getPlayerName().equals(playerName))
+        .filter(t-> t.getPlayerName().equals(playerName) && t.getRoundName().equals(round) )
+        //.filter(r-> r.getRoundName().equals(round))
         .map(c-> c.getCircleName())
         .collect(Collectors.toList());
           
@@ -96,14 +97,16 @@ public class CircleHitRepository implements ICircleHitRepository {
 
   
 
-    public Map<String, PlayerCirlcleHit> getCircleHitMap() {
+    public LinkedHashMap<String, PlayerCirlcleHit> getCircleHitMap() {
         return circleHitMap;
     }
 
     @Override
-    public String findAllCirclesHits() {
-        // TODO Auto-generated method stub
-        return null;
+    public void findAllCirclesHits() {
+        for(int i=1; i<=Constants.NUMBER_OF_MAX_ROUNDS; i++){
+            String num=Integer.toString(i);
+           System.out.println(getDataRoundWise(num));
+        }
     }
 
     @Override
@@ -115,13 +118,29 @@ public class CircleHitRepository implements ICircleHitRepository {
     @Override
     public List<String> getDataRoundWise(String roundName) {
         return circleHitMap.values().stream()
+        .filter(t-> t.getRoundName().equals(roundName))        
+        .map(c-> c.getCircleName())
+        .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getDataRoundAndTeamWise(String teamName, String roundName) {
+        return circleHitMap.values().stream()
+        .filter(t-> t.getTeamName().equals(teamName))
         .filter(t-> t.getRoundName().equals(roundName))
         .map(c-> c.getCircleName())
         .collect(Collectors.toList());
     }
 
-   
-
+   @Override
+    public List<String> findCircleByPlayerNameAndRound(String playerName, String round) {
+        return circleHitMap.values().stream()
+        .filter(t-> t.getPlayerName().equals(playerName))
+        .filter(t-> t.getRoundName().equals(round))
+        .map(c-> c.getCircleName())
+        .collect(Collectors.toList());
+          
+    }
        
 
 }

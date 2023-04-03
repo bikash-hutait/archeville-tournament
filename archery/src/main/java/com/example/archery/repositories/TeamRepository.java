@@ -1,22 +1,21 @@
 package com.example.archery.repositories;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import com.example.archery.entities.Team;
 
 public class TeamRepository implements ITeamRepository {
-    private final Map<String,Team> teamMap;
+    private final LinkedHashMap<String,Team> teamMap;
     private Integer autoIncrement=0;   
-
+   
     public TeamRepository(){
-        teamMap = new HashMap<String,Team>();
+        teamMap = new LinkedHashMap<String,Team>();
+       
     }
 
-    public TeamRepository(Map<String, Team> teamMap) {
+    public TeamRepository(LinkedHashMap<String, Team> teamMap) {
         this.teamMap = teamMap;       
     }
 
@@ -42,6 +41,22 @@ public class TeamRepository implements ITeamRepository {
     public List<Team> findAll() {
         return teamMap.values().stream().collect(Collectors.toList());
     }
+
+    @Override
+    public void getAllPlayers() {
+        teamMap.values().stream()
+       .forEach((team) -> System.out.print(team.getPlayer1()+","+ team.getPlayer2()+","));
+      
+    }
+
+    @Override
+    public void getAllTeamWithPlayers() {
+        teamMap.values().stream().forEach(
+            (team) -> System.out.println(team.getTeamName()+" "+ team.getPlayer1()+" "+ team.getPlayer2()));
+    
+    }
+
+    
 
     @Override
     public long count() {      
@@ -70,6 +85,8 @@ public class TeamRepository implements ITeamRepository {
         return Optional.empty();
     }
 
-   
+    
+
+    
 
 }

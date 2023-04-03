@@ -24,6 +24,7 @@ public class CreateTeamCommand  implements ICommand{
 
         Team team=teamService.create(teamName, player1,player2);
         System.out.println(team.getTeamName() +" "+ team.getPlayer1() + " "+ team.getPlayer2());
+        //System.out.println(team);
 
             
         } catch (Exception e) {           
